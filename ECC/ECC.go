@@ -61,7 +61,8 @@ func createRandomSalt(length int) string {
 	return string(result)
 }
 
-func GenerateRandomKeyByteArrayOfECC() ([]byte, []byte, error) {randKey := createRandomSalt(55)
+func GenerateRandomKeyByteArrayOfECC() ([]byte, []byte, error) {
+	randKey := createRandomSalt(55)
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), strings.NewReader(randKey))
 	if nil != err {
 		return nil, nil, err
@@ -506,8 +507,6 @@ func GetKeyByPemFile(privatePath string, publicPath string) (*ecies.PrivateKey, 
 }
 
 func EncryptECC(srcData string, publicKey *ecies.PublicKey) (cryptData string, err error) {
-
-	//公钥加密数据
 	encryptBytes, err := ecies.Encrypt(rand.Reader, publicKey, []byte(srcData), nil, nil)
 	if err != nil {
 		return "", err
@@ -519,12 +518,10 @@ func EncryptECC(srcData string, publicKey *ecies.PublicKey) (cryptData string, e
 }
 
 func DecryptECC(cryptData string, privateKey *ecies.PrivateKey) (srcData string, err error) {
-
-	//私钥解密数据
 	cryptBytes, err := hex.DecodeString(cryptData)
 	srcByte, err := privateKey.Decrypt(cryptBytes, nil, nil)
 	if err != nil {
-		fmt.Println("解密错误：", err)
+		fmt.Println("DecryptECC Error：", err)
 		return "", err
 	}
 	srcData = string(srcByte)
