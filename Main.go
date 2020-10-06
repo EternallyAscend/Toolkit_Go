@@ -1,11 +1,15 @@
 package main
 
 import (
+	AmbulandAES "./AES"
 	AmbulandJson "./Json"
 	"fmt"
 )
 
 func main() {
+	// AES
+	AmbulandAES.TestAES()
+	// Json
 	AmbulandJson.TestJson()
 	str := `{"name": "Course", "website": "https://coursera.com/", "course": ["Golang", "Rust", "JAVA", "C"]}`
 	AmbulandJson.ListItemInJson(str)
