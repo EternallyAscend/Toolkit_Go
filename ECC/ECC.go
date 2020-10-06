@@ -61,15 +61,14 @@ func createRandomSalt(length int) string {
 	return string(result)
 }
 
-func GenerateRandomKeyStringOfECC() (string, string, error) {
-	randKey := createRandomSalt(40)
+func GenerateRandomKeyByteArrayOfECC() ([]byte, []byte, error) {randKey := createRandomSalt(55)
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), strings.NewReader(randKey))
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	privateBytes, err := x509.MarshalECPrivateKey(privateKey)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	privateBlock := pem.Block{
 		Type:  "ecc private key",
@@ -82,37 +81,37 @@ func GenerateRandomKeyStringOfECC() (string, string, error) {
 	path += "-private.pem"
 
 	privateFileOutput, err := os.Create(path)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	defer privateFileOutput.Close()
 
 	err = pem.Encode(privateFileOutput, &privateBlock)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 
 	privateFileInput, err := os.Open(path)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	defer privateFileInput.Close()
 	privateKeyContent, err := privateFileInput.Stat()
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	privateKeyBuffer := make([]byte, privateKeyContent.Size())
 	_, err = privateFileInput.Read(privateKeyBuffer)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 
 	go RemovePemFile(path)
 
 	publicKey := privateKey.PublicKey
 	publicBytes, err := x509.MarshalPKIXPublicKey(&publicKey)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	publicBlock := pem.Block{
 		Type:  "ecc public key",
@@ -124,38 +123,38 @@ func GenerateRandomKeyStringOfECC() (string, string, error) {
 	path += "-public.pem"
 
 	publicFileOutput, err := os.Create(path)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	defer publicFileOutput.Close()
 	err = pem.Encode(publicFileOutput, &publicBlock)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 
 	publicFileInput, err := os.Open(path)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 	defer publicFileInput.Close()
 	publicKeyContent, err := publicFileInput.Stat()
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 
 	publicKeyBuffer := make([]byte, publicKeyContent.Size())
 	_, err = publicFileInput.Read(publicKeyBuffer)
-	if err != nil {
-		return "", "", err
+	if nil != err {
+		return nil, nil, err
 	}
 
 	go RemovePemFile(path)
 
-	return string(privateKeyBuffer), string(publicKeyBuffer), nil
+	return privateKeyBuffer, publicKeyBuffer, nil
 }
 
 func GenerateRandomKeyOfECC() (*ecies.PrivateKey, *ecies.PublicKey, error) {
-	randKey := createRandomSalt(40)
+	randKey := createRandomSalt(55)
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), strings.NewReader(randKey))
 	if err != nil {
 		return nil, nil, err
@@ -263,9 +262,180 @@ func GenerateRandomKeyOfECC() (*ecies.PrivateKey, *ecies.PublicKey, error) {
 	return privateKeyECIES, publicKeyECIES, nil
 }
 
+func GenerateRandomKeyStringOfECC() (string, string, error) {
+	randKey := createRandomSalt(55)
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), strings.NewReader(randKey))
+	if err != nil {
+		return "", "", err
+	}
+	privateBytes, err := x509.MarshalECPrivateKey(privateKey)
+	if err != nil {
+		return "", "", err
+	}
+	privateBlock := pem.Block{
+		Type:  "ecc private key",
+		Bytes: privateBytes,
+	}
+
+	var path string
+	//path = "./"
+	path = uuid.Must(uuid.NewV4()).String()
+	path += "-private.pem"
+
+	privateFileOutput, err := os.Create(path)
+	if err != nil {
+		return "", "", err
+	}
+	defer privateFileOutput.Close()
+
+	err = pem.Encode(privateFileOutput, &privateBlock)
+	if err != nil {
+		return "", "", err
+	}
+
+	privateFileInput, err := os.Open(path)
+	if err != nil {
+		return "", "", err
+	}
+	defer privateFileInput.Close()
+	privateKeyContent, err := privateFileInput.Stat()
+	if err != nil {
+		return "", "", err
+	}
+	privateKeyBuffer := make([]byte, privateKeyContent.Size())
+	_, err = privateFileInput.Read(privateKeyBuffer)
+	if err != nil {
+		return "", "", err
+	}
+
+	go RemovePemFile(path)
+
+	publicKey := privateKey.PublicKey
+	publicBytes, err := x509.MarshalPKIXPublicKey(&publicKey)
+	if err != nil {
+		return "", "", err
+	}
+	publicBlock := pem.Block{
+		Type:  "ecc public key",
+		Bytes: publicBytes,
+	}
+
+	//path = "./"
+	path = uuid.Must(uuid.NewV4()).String()
+	path += "-public.pem"
+
+	publicFileOutput, err := os.Create(path)
+	if err != nil {
+		return "", "", err
+	}
+	defer publicFileOutput.Close()
+	err = pem.Encode(publicFileOutput, &publicBlock)
+	if err != nil {
+		return "", "", err
+	}
+
+	publicFileInput, err := os.Open(path)
+	if err != nil {
+		return "", "", err
+	}
+	defer publicFileInput.Close()
+	publicKeyContent, err := publicFileInput.Stat()
+	if err != nil {
+		return "", "", err
+	}
+
+	publicKeyBuffer := make([]byte, publicKeyContent.Size())
+	_, err = publicFileInput.Read(publicKeyBuffer)
+	if err != nil {
+		return "", "", err
+	}
+
+	go RemovePemFile(path)
+
+	return string(privateKeyBuffer), string(publicKeyBuffer), nil
+}
+
+func GenerateRandomPemOfECC() (string, string, error) {
+	randKey := createRandomSalt(55)
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), strings.NewReader(randKey))
+	if err != nil {
+		return "", "", err
+	}
+	privateBytes, err := x509.MarshalECPrivateKey(privateKey)
+	if err != nil {
+		return "", "", err
+	}
+	privateBlock := pem.Block{
+		Type:  "ecc private key",
+		Bytes: privateBytes,
+	}
+
+	var privatePath string
+	//path = "./"
+	privatePath = uuid.Must(uuid.NewV4()).String()
+	privatePath += "-private.pem"
+
+	privateFileOutput, err := os.Create(privatePath)
+	if err != nil {
+		return "", "", err
+	}
+	defer privateFileOutput.Close()
+
+	err = pem.Encode(privateFileOutput, &privateBlock)
+	if err != nil {
+		return "", "", err
+	}
+
+	publicKey := privateKey.PublicKey
+	publicBytes, err := x509.MarshalPKIXPublicKey(&publicKey)
+	if err != nil {
+		return "", "", err
+	}
+	publicBlock := pem.Block{
+		Type:  "ecc public key",
+		Bytes: publicBytes,
+	}
+
+	var publicPath string
+	//path = "./"
+	publicPath = uuid.Must(uuid.NewV4()).String()
+	publicPath += "-public.pem"
+
+	publicFileOutput, err := os.Create(publicPath)
+	if err != nil {
+		return "", "", err
+	}
+	defer publicFileOutput.Close()
+	err = pem.Encode(publicFileOutput, &publicBlock)
+	if err != nil {
+		return "", "", err
+	}
+
+
+
+	return privatePath, publicPath, nil
+}
+
 func RemovePemFile(path string){
 	for nil != os.Remove(path) {
 	}
+}
+
+func GetKeyByByteArray(privateKeyBuffer []byte, publicKeyBuffer []byte) (*ecies.PrivateKey, *ecies.PublicKey, error) {
+	privateReaderBlock, _ := pem.Decode(privateKeyBuffer)
+	privateKeyBytes, err := x509.ParseECPrivateKey(privateReaderBlock.Bytes)
+	if err != nil {
+		return nil, nil, err
+	}
+	privateKeyECIES := ecies.ImportECDSA(privateKeyBytes)
+	publicReaderBlock, _ := pem.Decode(publicKeyBuffer)
+	publicKeyBytes, err := x509.ParsePKIXPublicKey(publicReaderBlock.Bytes)
+	if err != nil {
+		return nil, nil, err
+	}
+	publicKeyInner := publicKeyBytes.(*ecdsa.PublicKey)
+	publicKeyECIES := ecies.ImportECDSAPublic(publicKeyInner)
+	return privateKeyECIES, publicKeyECIES, err
 }
 
 func GetKeyByString(privateKeyString string, publicKeyString string) (*ecies.PrivateKey, *ecies.PublicKey, error) {
@@ -288,7 +458,37 @@ func GetKeyByString(privateKeyString string, publicKeyString string) (*ecies.Pri
 	return privateKeyECIES, publicKeyECIES, err
 }
 
-func GetKeyByByteArray(privateKeyBuffer []byte, publicKeyBuffer []byte) (*ecies.PrivateKey, *ecies.PublicKey, error) {
+func GetKeyByPemFile(privatePath string, publicPath string) (*ecies.PrivateKey, *ecies.PublicKey, error) {
+	privateFileInput, err := os.Open(privatePath)
+	if nil != err {
+		return nil, nil, err
+	}
+	defer privateFileInput.Close()
+	privateKeyContent, err := privateFileInput.Stat()
+	if nil != err {
+		return nil, nil, err
+	}
+	privateKeyBuffer := make([]byte, privateKeyContent.Size())
+	_, err = privateFileInput.Read(privateKeyBuffer)
+	if nil != err {
+		return nil, nil, err
+	}
+
+	publicFileInput, err := os.Open(publicPath)
+	if nil != err {
+		return nil, nil, err
+	}
+	defer publicFileInput.Close()
+	publicKeyContent, err := publicFileInput.Stat()
+	if nil != err {
+		return nil, nil, err
+	}
+
+	publicKeyBuffer := make([]byte, publicKeyContent.Size())
+	_, err = publicFileInput.Read(publicKeyBuffer)
+	if nil != err {
+		return nil, nil, err
+	}
 	privateReaderBlock, _ := pem.Decode(privateKeyBuffer)
 	privateKeyBytes, err := x509.ParseECPrivateKey(privateReaderBlock.Bytes)
 	if err != nil {
@@ -303,10 +503,6 @@ func GetKeyByByteArray(privateKeyBuffer []byte, publicKeyBuffer []byte) (*ecies.
 	publicKeyInner := publicKeyBytes.(*ecdsa.PublicKey)
 	publicKeyECIES := ecies.ImportECDSAPublic(publicKeyInner)
 	return privateKeyECIES, publicKeyECIES, err
-}
-
-func GetKeyByPemFile(privatePath string, publicPath string) (*ecies.PrivateKey, *ecies.PublicKey, error) {
-	return nil, nil, nil
 }
 
 func EncryptECC(srcData string, publicKey *ecies.PublicKey) (cryptData string, err error) {
