@@ -2,6 +2,7 @@ package main
 
 import (
 	AmbulandAES "./AES"
+	AmbulandECC "./ECC"
 	AmbulandJson "./Json"
 	"fmt"
 )
@@ -9,6 +10,8 @@ import (
 func main() {
 	// AES
 	AmbulandAES.TestAES()
+	// ECC
+	AmbulandECC.TestECC()
 	// Json
 	AmbulandJson.TestJson()
 	str := `{"name": "Course", "website": "https://coursera.com/", "course": ["Golang", "Rust", "JAVA", "C"]}`
