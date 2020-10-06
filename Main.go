@@ -7,7 +7,7 @@ import (
 
 func main() {
 	AmbulandJson.TestJson()
-	str := `{"name": "C语言中文网", "website": "http://c.biancheng.net/", "course": ["Golang", "PHP", "JAVA", "C"]}`
+	str := `{"name": "Course", "website": "https://coursera.com/", "course": ["Golang", "Rust", "JAVA", "C"]}`
 	AmbulandJson.ListItemInJson(str)
 	fmt.Println("---")
 	res, err := AmbulandJson.SearchItemInJson(str, "name")

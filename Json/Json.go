@@ -17,7 +17,7 @@ func TransferStringToJson(stringData string) (interface{}, error) {
 	return interfaces, nil
 }
 
-func transferJsonToString() {
+func TransferJsonToString() {
 
 }
 
@@ -87,6 +87,45 @@ func SearchItemInJson(jsonString string, keyword string) (string, error) {
 	return "", errors.New("Cannot found value. ")
 }
 
+func GetAllItemsInJson(jsonString string) ([]string, []string, error) {
+	var key []string
+	var value []string
+	key = []string{}
+	value = []string{}
+	var interfaces interface{}
+	interfaces, err := TransferStringToJson(jsonString)
+	if nil != err {
+		return nil, nil, err
+	}
+	content, ok := interfaces.(map[string]interface{})
+	if ok {
+		for k, v := range content {
+			key = append(key, k)
+			switch v2 := v.(type) {
+			case string:
+				value = append(value, v2)
+			case int:
+				value = append(value, string(v2))
+			case bool:
+				if v2 {
+					value = append(value, "true")
+				} else {
+					value = append(value, "false")
+				}
+			case []interface{}:
+				fmt.Println(k, "is an array:")
+				for i, iv := range v2 {
+					fmt.Println(i, iv)
+				}
+				return nil, nil, errors.New("Result is an array. ")
+			default:
+				return nil, nil, errors.New("Unknown Type. ")
+			}
+		}
+	}
+	return key, value, errors.New("Cannot found value. ")
+}
+
 // Another solution with unique structure.
 
 type Server struct {
@@ -104,10 +143,10 @@ func TestJson() {
 	str := `{
                 "servers": [
                     {
-                        "serverName": "Shanghai_VPN",
+                        "serverName": "Shanghai",
                         "serverIP": "127.0.0.1"
                     }, {
-                        "serverName": "Beijing_VPN",
+                        "serverName": "Beijing",
                         "serverIP": "127.0.0.2"
                     }
                 ]
