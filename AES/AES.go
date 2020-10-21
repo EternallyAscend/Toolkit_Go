@@ -27,7 +27,7 @@ func GenerateRandomKeyOfAES() []byte {
 	return []byte(uuid.Must(uuid.NewV4()).String()[:16])
 }
 
-func decryptAES(cipherText, key []byte) []byte {
+func DecryptAES(cipherText, key []byte) []byte {
 	block, _ := aes.NewCipher(key)
 	blockSize := block.BlockSize()
 	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
@@ -43,7 +43,7 @@ func PKCS7UnPadding(originData []byte) []byte {
 	return originData[:length-position]
 }
 
-func encryptAES(originData, key []byte) []byte {
+func EncryptAES(originData, key []byte) []byte {
 	block, _ := aes.NewCipher(key)
 	originData = PKCS7Padding(originData, block.BlockSize())
 	blockMode := cipher.NewCBCEncrypter(block, key[:block.BlockSize()])
