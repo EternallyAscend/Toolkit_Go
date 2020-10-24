@@ -20,7 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4e98c2a1-e323-4caa-a1d6-1f7935817b20" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/AES/AES.go" beforeDir="false" afterPath="$PROJECT_DIR$/AES/AES.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TCP/TCP.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
