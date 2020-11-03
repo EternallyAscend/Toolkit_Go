@@ -15,10 +15,10 @@ func TestAES() {
 	originData := []byte("Tom")
 	fmt.Println("Origin Data is:")
 	fmt.Println("Tom")
-	en := encryptAES(originData, key)
+	en := EncryptAES(originData, key)
 	fmt.Println("The result is:")
 	fmt.Println(en)
-	de := decryptAES(en, key)
+	de := DecryptAES(en, key)
 	fmt.Println("The result is:")
 	fmt.Println(string(de))
 }
